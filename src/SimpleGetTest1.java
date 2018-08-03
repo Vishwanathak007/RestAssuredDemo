@@ -4,6 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
+import io.restassured.http.Headers;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -21,8 +23,6 @@ public class SimpleGetTest1 {
 	@Test
 	public void GetWeatherDetails()
 	{   
-		
-
 		// Get the RequestSpecification of the request that you want to sent
 		// to the server. 
 		RequestSpecification httpRequest = RestAssured.given();
@@ -36,10 +36,20 @@ public class SimpleGetTest1 {
 		String responseBody = response.getBody().asString();
 		System.out.println("Response Body is =>  " + responseBody);
 		
+		Assert.assertEquals(responseBody.contains("Hyderabad") /*Actual value*/, true /*Expected Value*/, "Response body contains Hyderabad");
+		
+		//Get the status code of the Response Object
 		int statusCode=response.getStatusCode();
 		System.out.println("Status Code is "+statusCode);
 		Assert.assertEquals(statusCode, 200,"Correct:Success");
-
+		
+		Headers allHeaders = response.headers();
+		 
+		// Iterate over all the Headers
+		for(Header header : allHeaders)
+		{
+			System.out.println("Key: " + header.getName() + " Value: " + header.getValue());
+		}
 	}
 	
 	@AfterMethod
